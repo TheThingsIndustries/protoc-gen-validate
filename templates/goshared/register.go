@@ -14,8 +14,8 @@ import (
 	"github.com/lyft/protoc-gen-star/lang/go"
 )
 
-func Register(tpl *template.Template, params pgs.Parameters) {
-	fns := goSharedFuncs{pgsgo.InitContext(params)}
+func Register(tpl *template.Template, params pgs.Parameters, initContext func(pgs.Parameters) pgsgo.Context) {
+	fns := goSharedFuncs{initContext(params)}
 
 	tpl.Funcs(map[string]interface{}{
 		"accessor":      fns.accessor,
@@ -92,8 +92,11 @@ func (fns goSharedFuncs) accessor(ctx shared.RuleContext) string {
 	if ctx.AccessorOverride != "" {
 		return ctx.AccessorOverride
 	}
-
-	return fmt.Sprintf("m.Get%s()", fns.Name(ctx.Field))
+	name := fns.Name(ctx.Field)
+	if name == "" {
+		return fmt.Sprintf("m.%s", fns.Type(ctx.Field).Value())
+	}
+	return fmt.Sprintf("m.Get%s()", name)
 }
 
 func (fns goSharedFuncs) errName(m pgs.Message) pgs.Name {
