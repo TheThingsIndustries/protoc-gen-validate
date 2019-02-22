@@ -2,37 +2,69 @@ package goshared
 
 const msgTpl = `
 {{ if disabled . -}}
-	{{ cmt "Validate is disabled for " (msgTyp .) ". This method will always return nil." }}
+	{{ cmt "ValidateFields is disabled for " (msgTyp .) ". This method will always return nil." }}
 {{- else -}}
-	{{ cmt "Validate checks the field values on " (msgTyp .) " with the rules defined in the proto definition for this message. If any rules are violated, an error is returned." }}
+	{{ cmt "ValidateFields checks the field values on " (msgTyp .) " with the rules defined in the proto definition for this message. If any rules are violated, an error is returned." }}
 {{- end -}}
-func (m {{ (msgTyp .).Pointer }}) Validate() error {
+func (m {{ (msgTyp .).Pointer }}) ValidateFields(paths ...string) error {
 	{{ if disabled . -}}
 		return nil
 	{{ else -}}
-		if m == nil { return nil }
+		{{ if .Fields -}}
+			if m == nil { return nil }
 
-		{{ range .NonOneOfFields }}
-			{{ render (context .) }}
-		{{ end }}
-
-		{{ range .OneOfs }}
-			switch m.{{ name . }}.(type) {
-				{{ range .Fields }}
-					case {{ oneof . }}:
-						{{ render (context .) }}
-				{{ end }}
-				{{ if required . }}
-					default:
-						return {{ errname .Message }}{
-							field: "{{ name . }}",
-							reason: "value is required",
-						}
-				{{ end }}
+			if len(paths) == 0 {
+				paths = {{ msgTyp . }}FieldPathsNested
 			}
-		{{ end }}
 
-		return nil
+			for name, subs := range _processPaths(append(paths[:0:0], paths...)) {
+				_ = subs
+				switch name {
+			{{ range .NonOneOfFields }}
+				case "{{ .Name }}":
+					{{ render (context .) }}
+			{{ end }}
+
+			{{ range .OneOfs }}
+				case "{{ .Name }}":
+					if len(subs) == 0 {
+						subs = []string{
+							{{ range .Fields }}
+								"{{ .Name }}",
+							{{ end }}
+						}
+					}
+					for name, subs := range _processPaths(subs) {
+						_ = subs
+						switch name {
+						{{ range .Fields }}
+							case "{{ .Name }}":
+								{{ render (context .) }}
+						{{ end }}
+						{{ if required . }}
+							default:
+								return {{ errname .Message }}{
+									field: "{{ name . }}",
+									reason: "value is required",
+								}
+						{{ end }}
+						}		
+					}
+			{{ end }}
+				default:
+					return {{ errname . }} {
+						field: name,
+						reason: "invalid field path",
+					}
+				}
+			}
+			return nil
+		{{else -}}
+			if len(paths) > 0 {
+				return fmt.Errorf("message {{ msgTyp . }} has no fields, but paths %s were specified", paths)
+			}
+			return nil
+		{{end -}}
 	{{ end -}}
 }
 
@@ -40,7 +72,7 @@ func (m {{ (msgTyp .).Pointer }}) Validate() error {
 
 {{ if needs . "email" }}{{ template "email" . }}{{ end }}
 
-{{ cmt (errname .) " is the validation error returned by " (msgTyp .) ".Validate if the designated constraints aren't met." -}}
+{{ cmt (errname .) " is the validation error returned by " (msgTyp .) ".ValidateFields if the designated constraints aren't met." -}}
 type {{ errname . }} struct {
 	field  string
 	reason string
