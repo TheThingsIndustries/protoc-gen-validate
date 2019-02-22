@@ -7,7 +7,7 @@ import (
 
 	"github.com/golang/protobuf/proto"
 	"github.com/lyft/protoc-gen-star"
-	"github.com/lyft/protoc-gen-validate/gogoproto"
+	"github.com/lyft/protoc-gen-star/gogoproto"
 	"github.com/lyft/protoc-gen-validate/validate"
 )
 
