@@ -1,15 +1,15 @@
 package goshared
 
 const msgTpl = `
-{{ if disabled . -}}
-	{{ cmt "ValidateFields is disabled for " (msgTyp .) ". This method will always return nil." }}
-{{- else -}}
-	{{ cmt "ValidateFields checks the field values on " (msgTyp .) " with the rules defined in the proto definition for this message. If any rules are violated, an error is returned." }}
-{{- end -}}
+{{ if disabled . }}
+	{{- cmt "ValidateFields is disabled for " (msgTyp .) ". This method will always return nil." -}}
+{{ else }}
+	{{- cmt "ValidateFields checks the field values on " (msgTyp .) " with the rules defined in the proto definition for this message. If any rules are violated, an error is returned." -}}
+{{ end -}}
 func (m {{ (msgTyp .).Pointer }}) ValidateFields(paths ...string) error {
 	{{ if disabled . -}}
 		return nil
-	{{ else -}}
+	{{- else -}}
 		{{ if .Fields -}}
 			if m == nil { return nil }
 
@@ -20,37 +20,37 @@ func (m {{ (msgTyp .).Pointer }}) ValidateFields(paths ...string) error {
 			for name, subs := range _processPaths(append(paths[:0:0], paths...)) {
 				_ = subs
 				switch name {
-			{{ range .NonOneOfFields }}
+			{{ range .NonOneOfFields -}}
 				case "{{ .Name }}":
 					{{ render (context .) }}
-			{{ end }}
+			{{ end -}}
 
-			{{ range .OneOfs }}
+			{{ range .OneOfs -}}
 				case "{{ .Name }}":
 					if len(subs) == 0 {
 						subs = []string{
-							{{ range .Fields }}
+							{{ range .Fields -}}
 								"{{ .Name }}",
-							{{ end }}
+							{{- end }}
 						}
 					}
 					for name, subs := range _processPaths(subs) {
 						_ = subs
 						switch name {
-						{{ range .Fields }}
+						{{ range .Fields -}}
 							case "{{ .Name }}":
 								{{ render (context .) }}
-						{{ end }}
+						{{ end -}}
 						{{ if required . }}
 							default:
 								return {{ errname .Message }}{
 									field:  {{ .Name }},
 									reason: "value is required",
 								}
-						{{ end }}
+						{{ end -}}
 						}		
 					}
-			{{ end }}
+			{{ end -}}
 				default:
 					return {{ errname . }} {
 						field:  name,
@@ -59,13 +59,13 @@ func (m {{ (msgTyp .).Pointer }}) ValidateFields(paths ...string) error {
 				}
 			}
 			return nil
-		{{else -}}
+		{{ else -}}
 			if len(paths) > 0 {
 				return fmt.Errorf("message {{ msgTyp . }} has no fields, but paths %s were specified", paths)
 			}
 			return nil
-		{{end -}}
-	{{ end -}}
+		{{ end -}}
+	{{- end -}}
 }
 
 {{ if needs . "hostname" }}{{ template "hostname" . }}{{ end }}
