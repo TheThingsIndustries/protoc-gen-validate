@@ -91,11 +91,22 @@ func (fns goSharedFuncs) accessor(ctx shared.RuleContext) string {
 	if ctx.AccessorOverride != "" {
 		return ctx.AccessorOverride
 	}
-	name := fns.Name(ctx.Field)
-	if name == "" {
-		return fmt.Sprintf("m.%s", fns.Type(ctx.Field).Value())
+
+	name := fns.Name(ctx.Field).String()
+	if name != "" && ctx.Gogo.Nullable {
+		return fmt.Sprintf("m.Get%s()", name)
 	}
-	return fmt.Sprintf("m.Get%s()", name)
+
+	if name == "" {
+		name = fmt.Sprintf("m.%s", fns.Type(ctx.Field).Value())
+	} else {
+		name = fmt.Sprintf("m.%s", name)
+	}
+
+	if !ctx.Gogo.Nullable && !ctx.Field.Type().IsRepeated() && !ctx.Field.Type().IsMap() {
+		return fmt.Sprintf("&%s", name)
+	}
+	return name
 }
 
 func (fns goSharedFuncs) errName(m pgs.Message) pgs.Name {
