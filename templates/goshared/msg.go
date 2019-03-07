@@ -44,7 +44,7 @@ func (m {{ (msgTyp .).Pointer }}) ValidateFields(paths ...string) error {
 						{{ if required . }}
 							default:
 								return {{ errname .Message }}{
-									field:  {{ .Name }},
+									field:  "{{ .Name }}",
 									reason: "value is required",
 								}
 						{{ end -}}
