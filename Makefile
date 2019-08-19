@@ -2,6 +2,8 @@ empty :=
 space := $(empty) $(empty)
 PACKAGE := github.com/envoyproxy/protoc-gen-validate
 
+export GO111MODULE = on
+
 # protoc-gen-go parameters for properly generating the import path for PGV
 VALIDATE_IMPORT := Mvalidate/validate.proto=${PACKAGE}/validate
 GO_IMPORT_SPACES := ${VALIDATE_IMPORT},\
@@ -50,21 +52,23 @@ gazelle: vendor
 	buildozer 'replace deps //vendor/github.com/gogo/protobuf/proto:go_default_library @com_github_gogo_protobuf//proto:go_default_library' '//...:%go_library'
 	buildozer 'replace deps //vendor/github.com/gogo/protobuf/types:go_default_library @com_github_gogo_protobuf//types:go_default_library' '//...:%go_library'
 
-vendor:
-	dep ensure -v -update
+vendor: go.sum go.mod
+	go mod vendor
+
+shadow: vendor
+	go build -o $@ vendor/golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow
 
 .PHONY: lint
-lint:
+lint: shadow
 	# lints the package for common code smells
-	which golint || go get -u golang.org/x/lint/golint
-	which shadow || go get -u golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow
+	go run golang.org/x/lint/golint
 	test -z "$(gofmt -d -s ./*.go)" || (gofmt -d -s ./*.go && exit 1)
 	# golint -set_exit_status
 	# check for variable shadowing
-	go vet -vettool=$(which shadow) *.go
+	go vet -vettool=shadow *.go
 
-gogofast:
-	go build -o $@ vendor/github.com/gogo/protobuf/protoc-gen-gogofast/main.go
+gogofast: vendor
+	go build -o $@ vendor/github.com/gogo/protobuf/protoc-gen-gogofast
 
 .PHONY: harness
 harness: testcases tests/harness/go/harness.pb.go tests/harness/gogo/harness.pb.go tests/harness/go/main/go-harness tests/harness/gogo/main/go-harness tests/harness/cc/cc-harness
@@ -72,7 +76,7 @@ harness: testcases tests/harness/go/harness.pb.go tests/harness/gogo/harness.pb.
 	go run ./tests/harness/executor/*.go -go -gogo -cc
 
 .PHONY: bazel-harness
-bazel-harness:
+bazel-harness: vendor
 	# runs the test harness via bazel
 	bazel run //tests/harness/executor:executor --incompatible_new_actions_api=false -- -go -gogo -cc -java -python
 

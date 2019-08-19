@@ -1,6 +1,6 @@
 bazel-*
 
-!vendor/*
+vendor
 
 /gogofast
 /gogofast.exe
