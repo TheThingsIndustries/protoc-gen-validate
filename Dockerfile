@@ -35,7 +35,7 @@ RUN wget https://github.com/google/protobuf/releases/download/v"${PROTOC_VER}/${
 ENV GOROOT /usr/local/go
 ENV GOPATH /go
 ENV PATH $GOPATH/bin:$GOROOT/bin:$PATH
-ENV GORELEASE go1.11.5.linux-amd64.tar.gz
+ENV GORELEASE go1.12.9.linux-amd64.tar.gz
 RUN wget -q https://storage.googleapis.com/golang/$GORELEASE \
     && tar -C $(dirname $GOROOT) -xzf $GORELEASE \
     && rm $GORELEASE \
