@@ -4,6 +4,7 @@ import (
 	"text/template"
 
 	"github.com/envoyproxy/protoc-gen-validate/templates/goshared"
+	pgs "github.com/lyft/protoc-gen-star"
 	pgsgo "github.com/lyft/protoc-gen-star/lang/go"
 )
 
