@@ -7,15 +7,15 @@ import (
 
 	"github.com/envoyproxy/protoc-gen-validate/validate"
 	"github.com/golang/protobuf/proto"
-	"github.com/lyft/protoc-gen-star"
+	pgs "github.com/lyft/protoc-gen-star"
 	"github.com/lyft/protoc-gen-star/gogoproto"
 )
 
 type RuleContext struct {
-	Field pgs.Field
-	Rules proto.Message
+	Field        pgs.Field
+	Rules        proto.Message
 	MessageRules *validate.MessageRules
-	Gogo  Gogo
+	Gogo         Gogo
 
 	Typ        string
 	WrapperTyp string
@@ -117,7 +117,7 @@ func (ctx RuleContext) Unwrap(name string) (out RuleContext, err error) {
 	return RuleContext{
 		Field:            ctx.Field,
 		Rules:            ctx.Rules,
-		MessageRules:	  ctx.MessageRules,
+		MessageRules:     ctx.MessageRules,
 		Typ:              ctx.WrapperTyp,
 		AccessorOverride: name,
 		Gogo:             ctx.Gogo,

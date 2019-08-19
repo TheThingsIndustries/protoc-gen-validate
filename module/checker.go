@@ -11,7 +11,7 @@ import (
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/duration"
 	"github.com/golang/protobuf/ptypes/timestamp"
-	"github.com/lyft/protoc-gen-star"
+	pgs "github.com/lyft/protoc-gen-star"
 )
 
 type FieldType interface {
@@ -479,4 +479,3 @@ func (m *Module) checkTS(ts *timestamp.Timestamp) *int64 {
 	m.CheckErr(err, "could not resolve timestamp")
 	return proto.Int64(t.UnixNano())
 }
-
