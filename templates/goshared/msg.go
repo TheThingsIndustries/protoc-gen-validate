@@ -27,6 +27,15 @@ func (m {{ (msgTyp .).Pointer }}) ValidateFields(paths ...string) error {
 
 			{{ range .OneOfs -}}
 				case "{{ .Name }}":
+                    {{ $wf := name . -}}
+					{{ if required . -}}
+                    if m.{{ $wf }} == nil {
+					    return {{ errname .Message }}{
+					 	    field:  "{{ .Name }}",
+					 		reason: "value is required",
+					    }
+                    }
+					{{ end -}}
 					if len(subs) == 0 {
 						subs = []string{
 							{{ range .Fields -}}
@@ -39,14 +48,11 @@ func (m {{ (msgTyp .).Pointer }}) ValidateFields(paths ...string) error {
 						switch name {
 						{{ range .Fields -}}
 							case "{{ .Name }}":
+                                w, ok := m.{{ $wf }}.({{ oneof . }})
+                                if !ok || w == nil {
+                                    continue
+                                }
 								{{ render (context .) }}
-						{{ end -}}
-						{{ if required . }}
-							default:
-								return {{ errname .Message }}{
-									field:  "{{ .Name }}",
-									reason: "value is required",
-								}
 						{{ end -}}
 						}		
 					}
