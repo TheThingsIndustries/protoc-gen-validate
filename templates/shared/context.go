@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"text/template"
 
-	"github.com/envoyproxy/protoc-gen-validate/gogoproto"
 	"github.com/envoyproxy/protoc-gen-validate/validate"
 	"github.com/golang/protobuf/proto"
 	pgs "github.com/lyft/protoc-gen-star"
+	"github.com/lyft/protoc-gen-star/gogoproto"
 )
 
 type RuleContext struct {
