@@ -2,7 +2,7 @@ module github.com/envoyproxy/protoc-gen-validate
 
 go 1.13
 
-replace github.com/lyft/protoc-gen-star => github.com/TheThingsIndustries/protoc-gen-star v0.4.14-gogo.2
+replace github.com/lyft/protoc-gen-star => github.com/TheThingsIndustries/protoc-gen-star v0.4.14-gogo.3
 
 require (
 	github.com/gogo/protobuf v1.3.1
