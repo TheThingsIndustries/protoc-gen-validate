@@ -27,6 +27,7 @@ type RuleContext struct {
 
 type Gogo struct {
 	Nullable    bool
+	Embed       bool
 	StdDuration bool
 	StdTime     bool
 }
@@ -36,6 +37,7 @@ func rulesContext(f pgs.Field) (out RuleContext, err error) {
 
 	out.Gogo.Nullable = true
 	f.Extension(gogoproto.E_Nullable, &out.Gogo.Nullable)
+	f.Extension(gogoproto.E_Embed, &out.Gogo.Embed)
 	f.Extension(gogoproto.E_Stdduration, &out.Gogo.StdDuration)
 	f.Extension(gogoproto.E_Stdtime, &out.Gogo.StdTime)
 

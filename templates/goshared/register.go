@@ -95,6 +95,10 @@ func (fns goSharedFuncs) accessor(ctx shared.RuleContext) string {
 		return ctx.AccessorOverride
 	}
 
+	if ctx.Gogo.Embed && ctx.Field.Type().IsEmbed() {
+		return fmt.Sprintf("m.%s", fns.Name(ctx.Field.Type().Embed()))
+	}
+
 	name := fns.Name(ctx.Field).String()
 	if name != "" && ctx.Gogo.Nullable {
 		return fmt.Sprintf("m.Get%s()", name)
