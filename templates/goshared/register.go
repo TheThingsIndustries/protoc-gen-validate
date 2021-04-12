@@ -96,7 +96,11 @@ func (fns goSharedFuncs) accessor(ctx shared.RuleContext) string {
 	}
 
 	if ctx.Gogo.Embed && ctx.Field.Type().IsEmbed() {
-		return fmt.Sprintf("m.%s", fns.Name(ctx.Field.Type().Embed()))
+		ptr := "" // Embedded message is already pointer type.
+		if !ctx.Gogo.Nullable {
+			ptr = "&" // Embedded message is a value type.
+		}
+		return fmt.Sprintf("%sm.%s", ptr, fns.Name(ctx.Field.Type().Embed()))
 	}
 
 	name := fns.Name(ctx.Field).String()
