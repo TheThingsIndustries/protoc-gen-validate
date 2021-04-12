@@ -112,6 +112,8 @@ var floatCases = []TestCase{
 	{"float - exclusive gte & lte - valid (max)", &cases.FloatExGTELTE{Val: 256}, true},
 	{"float - exclusive gte & lte - valid (min)", &cases.FloatExGTELTE{Val: 128}, true},
 	{"float - exclusive gte & lte - invalid", &cases.FloatExGTELTE{Val: 200}, false},
+
+	{"float - ignore_empty gte & lte - valid", &cases.FloatIgnore{Val: 0}, true},
 }
 
 var doubleCases = []TestCase{
@@ -165,6 +167,8 @@ var doubleCases = []TestCase{
 	{"double - exclusive gte & lte - valid (max)", &cases.DoubleExGTELTE{Val: 256}, true},
 	{"double - exclusive gte & lte - valid (min)", &cases.DoubleExGTELTE{Val: 128}, true},
 	{"double - exclusive gte & lte - invalid", &cases.DoubleExGTELTE{Val: 200}, false},
+
+	{"double - ignore_empty gte & lte - valid", &cases.DoubleIgnore{Val: 0}, true},
 }
 
 var int32Cases = []TestCase{
@@ -218,6 +222,8 @@ var int32Cases = []TestCase{
 	{"int32 - exclusive gte & lte - valid (max)", &cases.Int32ExGTELTE{Val: 256}, true},
 	{"int32 - exclusive gte & lte - valid (min)", &cases.Int32ExGTELTE{Val: 128}, true},
 	{"int32 - exclusive gte & lte - invalid", &cases.Int32ExGTELTE{Val: 200}, false},
+
+	{"int32 - ignore_empty gte & lte - valid", &cases.Int32Ignore{Val: 0}, true},
 }
 
 var int64Cases = []TestCase{
@@ -271,6 +277,8 @@ var int64Cases = []TestCase{
 	{"int64 - exclusive gte & lte - valid (max)", &cases.Int64ExGTELTE{Val: 256}, true},
 	{"int64 - exclusive gte & lte - valid (min)", &cases.Int64ExGTELTE{Val: 128}, true},
 	{"int64 - exclusive gte & lte - invalid", &cases.Int64ExGTELTE{Val: 200}, false},
+
+	{"int64 - ignore_empty gte & lte - valid", &cases.Int64Ignore{Val: 0}, true},
 }
 
 var uint32Cases = []TestCase{
@@ -324,6 +332,8 @@ var uint32Cases = []TestCase{
 	{"uint32 - exclusive gte & lte - valid (max)", &cases.UInt32ExGTELTE{Val: 256}, true},
 	{"uint32 - exclusive gte & lte - valid (min)", &cases.UInt32ExGTELTE{Val: 128}, true},
 	{"uint32 - exclusive gte & lte - invalid", &cases.UInt32ExGTELTE{Val: 200}, false},
+
+	{"uint32 - ignore_empty gte & lte - valid", &cases.UInt32Ignore{Val: 0}, true},
 }
 
 var uint64Cases = []TestCase{
@@ -377,6 +387,8 @@ var uint64Cases = []TestCase{
 	{"uint64 - exclusive gte & lte - valid (max)", &cases.UInt64ExGTELTE{Val: 256}, true},
 	{"uint64 - exclusive gte & lte - valid (min)", &cases.UInt64ExGTELTE{Val: 128}, true},
 	{"uint64 - exclusive gte & lte - invalid", &cases.UInt64ExGTELTE{Val: 200}, false},
+
+	{"uint64 - ignore_empty gte & lte - valid", &cases.UInt64Ignore{Val: 0}, true},
 }
 
 var sint32Cases = []TestCase{
@@ -430,6 +442,8 @@ var sint32Cases = []TestCase{
 	{"sint32 - exclusive gte & lte - valid (max)", &cases.SInt32ExGTELTE{Val: 256}, true},
 	{"sint32 - exclusive gte & lte - valid (min)", &cases.SInt32ExGTELTE{Val: 128}, true},
 	{"sint32 - exclusive gte & lte - invalid", &cases.SInt32ExGTELTE{Val: 200}, false},
+
+	{"sint32 - ignore_empty gte & lte - valid", &cases.SInt32Ignore{Val: 0}, true},
 }
 
 var sint64Cases = []TestCase{
@@ -483,6 +497,8 @@ var sint64Cases = []TestCase{
 	{"sint64 - exclusive gte & lte - valid (max)", &cases.SInt64ExGTELTE{Val: 256}, true},
 	{"sint64 - exclusive gte & lte - valid (min)", &cases.SInt64ExGTELTE{Val: 128}, true},
 	{"sint64 - exclusive gte & lte - invalid", &cases.SInt64ExGTELTE{Val: 200}, false},
+
+	{"sint64 - ignore_empty gte & lte - valid", &cases.SInt64Ignore{Val: 0}, true},
 }
 
 var fixed32Cases = []TestCase{
@@ -536,6 +552,8 @@ var fixed32Cases = []TestCase{
 	{"fixed32 - exclusive gte & lte - valid (max)", &cases.Fixed32ExGTELTE{Val: 256}, true},
 	{"fixed32 - exclusive gte & lte - valid (min)", &cases.Fixed32ExGTELTE{Val: 128}, true},
 	{"fixed32 - exclusive gte & lte - invalid", &cases.Fixed32ExGTELTE{Val: 200}, false},
+
+	{"fixed32 - ignore_empty gte & lte - valid", &cases.Fixed32Ignore{Val: 0}, true},
 }
 
 var fixed64Cases = []TestCase{
@@ -589,6 +607,8 @@ var fixed64Cases = []TestCase{
 	{"fixed64 - exclusive gte & lte - valid (max)", &cases.Fixed64ExGTELTE{Val: 256}, true},
 	{"fixed64 - exclusive gte & lte - valid (min)", &cases.Fixed64ExGTELTE{Val: 128}, true},
 	{"fixed64 - exclusive gte & lte - invalid", &cases.Fixed64ExGTELTE{Val: 200}, false},
+
+	{"fixed64 - ignore_empty gte & lte - valid", &cases.Fixed64Ignore{Val: 0}, true},
 }
 
 var sfixed32Cases = []TestCase{
@@ -642,6 +662,8 @@ var sfixed32Cases = []TestCase{
 	{"sfixed32 - exclusive gte & lte - valid (max)", &cases.SFixed32ExGTELTE{Val: 256}, true},
 	{"sfixed32 - exclusive gte & lte - valid (min)", &cases.SFixed32ExGTELTE{Val: 128}, true},
 	{"sfixed32 - exclusive gte & lte - invalid", &cases.SFixed32ExGTELTE{Val: 200}, false},
+
+	{"sfixed32 - ignore_empty gte & lte - valid", &cases.SFixed32Ignore{Val: 0}, true},
 }
 
 var sfixed64Cases = []TestCase{
@@ -695,6 +717,8 @@ var sfixed64Cases = []TestCase{
 	{"sfixed64 - exclusive gte & lte - valid (max)", &cases.SFixed64ExGTELTE{Val: 256}, true},
 	{"sfixed64 - exclusive gte & lte - valid (min)", &cases.SFixed64ExGTELTE{Val: 128}, true},
 	{"sfixed64 - exclusive gte & lte - invalid", &cases.SFixed64ExGTELTE{Val: 200}, false},
+
+	{"sfixed64 - ignore_empty gte & lte - valid", &cases.SFixed64Ignore{Val: 0}, true},
 }
 
 var boolCases = []TestCase{
@@ -802,6 +826,7 @@ var stringCases = []TestCase{
 	{"string - email - invalid (local segment too long)", &cases.StringEmail{Val: "x0123456789012345678901234567890123456789012345678901234567890123456789@example.com"}, false},
 	{"string - email - invalid (hostname too long)", &cases.StringEmail{Val: "foo@x0123456789012345678901234567890123456789012345678901234567890123456789.com"}, false},
 	{"string - email - invalid (bad hostname)", &cases.StringEmail{Val: "foo@-bar.com"}, false},
+	{"string - email - empty", &cases.StringEmail{Val: ""}, false},
 
 	{"string - address - valid hostname", &cases.StringAddress{Val: "example.com"}, true},
 	{"string - address - valid hostname (uppercase)", &cases.StringAddress{Val: "ASD.example.com"}, true},
@@ -866,6 +891,7 @@ var stringCases = []TestCase{
 	{"string - UUID - valid (v5 - case-insensitive)", &cases.StringUUID{Val: "A6EDC906-2F9F-5FB2-A373-EFAC406F0EF2"}, true},
 	{"string - UUID - invalid", &cases.StringUUID{Val: "foobar"}, false},
 	{"string - UUID - invalid (bad UUID)", &cases.StringUUID{Val: "ffffffff-ffff-ffff-ffff-fffffffffffff"}, false},
+	{"string - UUID - valid (ignore_empty)", &cases.StringUUIDIgnore{Val: ""}, true},
 
 	{"string - http header name - valid", &cases.StringHttpHeaderName{Val: "clustername"}, true},
 	{"string - http header name - valid", &cases.StringHttpHeaderName{Val: ":path"}, true},
@@ -958,6 +984,8 @@ var bytesCases = []TestCase{
 	{"bytes - IPv6 - valid", &cases.BytesIPv6{Val: []byte("\x20\x01\x0D\xB8\x85\xA3\x00\x00\x00\x00\x8A\x2E\x03\x70\x73\x34")}, true},
 	{"bytes - IPv6 - invalid", &cases.BytesIPv6{Val: []byte("fooar")}, false},
 	{"bytes - IPv6 - invalid (v4)", &cases.BytesIPv6{Val: []byte{0xC0, 0xA8, 0x00, 0x01}}, false},
+
+	{"bytes - IPv6 - valid (ignore_empty)", &cases.BytesIPv6Ignore{Val: nil}, true},
 }
 
 var enumCases = []TestCase{
@@ -1010,6 +1038,9 @@ var messageCases = []TestCase{
 	{"message - disabled - valid", &cases.MessageDisabled{Val: 456}, true},
 	{"message - disabled - valid (invalid field)", &cases.MessageDisabled{Val: 0}, true},
 
+	{"message - ignored - valid", &cases.MessageIgnored{Val: 456}, true},
+	{"message - ignored - valid (invalid field)", &cases.MessageIgnored{Val: 0}, true},
+
 	{"message - field - valid", &cases.Message{Val: &cases.TestMsg{Const: "foo"}}, true},
 	{"message - field - valid (unset)", &cases.Message{}, true},
 	{"message - field - invalid", &cases.Message{Val: &cases.TestMsg{}}, false},
@@ -1018,7 +1049,9 @@ var messageCases = []TestCase{
 	{"message - skip - valid", &cases.MessageSkip{Val: &cases.TestMsg{}}, true},
 
 	{"message - required - valid", &cases.MessageRequired{Val: &cases.TestMsg{Const: "foo"}}, true},
+	{"message - required - valid (oneof)", &cases.MessageRequiredOneof{One: &cases.MessageRequiredOneof_Val{&cases.TestMsg{Const: "foo"}}}, true},
 	{"message - required - invalid", &cases.MessageRequired{}, false},
+	{"message - required - invalid (oneof)", &cases.MessageRequiredOneof{}, false},
 
 	{"message - cross-package embed none - valid", &cases.MessageCrossPackage{Val: &other_package.Embed{Val: 1}}, true},
 	{"message - cross-package embed none - valid (nil)", &cases.MessageCrossPackage{}, true},
@@ -1077,6 +1110,10 @@ var repeatedCases = []TestCase{
 	{"repeated - items - valid (enum in)", &cases.RepeatedEnumIn{Val: []cases.AnEnum{0}}, true},
 	{"repeated - items - invalid (enum not_in)", &cases.RepeatedEnumNotIn{Val: []cases.AnEnum{0}}, false},
 	{"repeated - items - valid (enum not_in)", &cases.RepeatedEnumNotIn{Val: []cases.AnEnum{1}}, true},
+	{"repeated - items - invalid (embedded enum in)", &cases.RepeatedEmbeddedEnumIn{Val: []cases.RepeatedEmbeddedEnumIn_AnotherInEnum{1}}, false},
+	{"repeated - items - valid (embedded enum in)", &cases.RepeatedEmbeddedEnumIn{Val: []cases.RepeatedEmbeddedEnumIn_AnotherInEnum{0}}, true},
+	{"repeated - items - invalid (embedded enum not_in)", &cases.RepeatedEmbeddedEnumNotIn{Val: []cases.RepeatedEmbeddedEnumNotIn_AnotherNotInEnum{0}}, false},
+	{"repeated - items - valid (embedded enum not_in)", &cases.RepeatedEmbeddedEnumNotIn{Val: []cases.RepeatedEmbeddedEnumNotIn_AnotherNotInEnum{1}}, true},
 
 	{"repeated - embed skip - valid", &cases.RepeatedEmbedSkip{Val: []*cases.Embed{{Val: 1}}}, true},
 	{"repeated - embed skip - valid (invalid element)", &cases.RepeatedEmbedSkip{Val: []*cases.Embed{{Val: -1}}}, true},
@@ -1091,6 +1128,8 @@ var repeatedCases = []TestCase{
 	{"repeated - duration - gte - valid (empty)", &cases.RepeatedDuration{}, true},
 	{"repeated - duration - gte - valid (equal)", &cases.RepeatedDuration{Val: []*duration.Duration{{Nanos: 1000000}}}, true},
 	{"repeated - duration - gte - invalid", &cases.RepeatedDuration{Val: []*duration.Duration{{Seconds: -1}}}, false},
+
+	{"repeated - exact - valid (ignore_empty)", &cases.RepeatedExactIgnore{Val: nil}, true},
 }
 
 var mapCases = []TestCase{
@@ -1133,6 +1172,7 @@ var mapCases = []TestCase{
 
 	{"map - recursive - valid", &cases.MapRecursive{Val: map[uint32]*cases.MapRecursive_Msg{1: {Val: "abc"}}}, true},
 	{"map - recursive - invalid", &cases.MapRecursive{Val: map[uint32]*cases.MapRecursive_Msg{1: {}}}, false},
+	{"map - exact - valid (ignore_empty)", &cases.MapExactIgnore{Val: nil}, true},
 }
 
 var oneofCases = []TestCase{

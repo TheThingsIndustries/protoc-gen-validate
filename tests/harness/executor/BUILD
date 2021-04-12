@@ -20,10 +20,10 @@ go_library(
         "//tests/harness/cases:go",
         "//tests/harness/cases/other_package:go",
         "@com_github_golang_protobuf//proto:go_default_library",
-        "@com_github_golang_protobuf//ptypes:go_default_library",
-        "@com_github_golang_protobuf//ptypes/duration:go_default_library",
-        "@com_github_golang_protobuf//ptypes/timestamp:go_default_library",
+        "@com_github_golang_protobuf//ptypes:go_default_library_gen",
         "@io_bazel_rules_go//proto/wkt:any_go_proto",
+        "@io_bazel_rules_go//proto/wkt:duration_go_proto",
+        "@io_bazel_rules_go//proto/wkt:timestamp_go_proto",
         "@io_bazel_rules_go//proto/wkt:wrappers_go_proto",
         "@org_golang_x_net//context:go_default_library",
     ],
@@ -47,3 +47,20 @@ go_binary(
     importpath = "github.com/envoyproxy/protoc-gen-validate/tests/harness/executor",
     visibility = ["//visibility:private"],
 )
+
+[
+    sh_test(
+        name = "executor_" + lang + "_test",
+        srcs = ["executor_test.sh"],
+        args = [
+            "$(location :executor)",
+            "-" + lang,
+        ],
+        data = [":executor"],
+        # This could be sharded more, but each shard incurs overhead and test
+        # execution is already sharded by having separate test rules for each language.
+        shard_count = 5,
+        deps = ["@bazel_tools//tools/bash/runfiles"],
+    )
+    for lang in ("cc", "java", "python")
+]

@@ -8,25 +8,29 @@ def pgv_dependencies():
     if not native.existing_rule("io_bazel_rules_go"):
         http_archive(
             name = "io_bazel_rules_go",
-            sha256 = "608bb3e3788a21aa0653faaa6a3e00ddf806e26aa97a6f0d960ace2b2c958950",
-            strip_prefix = "rules_go-0.23.3",
-            urls = ["https://github.com/bazelbuild/rules_go/archive/v0.23.3.tar.gz"],
+            sha256 = "6f111c57fd50baf5b8ee9d63024874dd2a014b069426156c55adbf6d3d22cb7b",
+            urls = [
+                "https://mirror.bazel.build/github.com/bazelbuild/rules_go/releases/download/v0.25.0/rules_go-v0.25.0.tar.gz",
+                "https://github.com/bazelbuild/rules_go/releases/download/v0.25.0/rules_go-v0.25.0.tar.gz",
+            ],
         )
 
     if not native.existing_rule("bazel_gazelle"):
         http_archive(
             name = "bazel_gazelle",
-            sha256 = "2423201f91471ea87925b81962258e27a22cd8ebb4fe355bf033dcf2ad668541",
-            strip_prefix = "bazel-gazelle-0.21.1",
-            urls = ["https://github.com/bazelbuild/bazel-gazelle/archive/v0.21.1.tar.gz"],
+            sha256 = "b85f48fa105c4403326e9525ad2b2cc437babaa6e15a3fc0b1dbab0ab064bc7c",
+            urls = [
+                "https://mirror.bazel.build/github.com/bazelbuild/bazel-gazelle/releases/download/v0.22.2/bazel-gazelle-v0.22.2.tar.gz",
+                "https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.22.2/bazel-gazelle-v0.22.2.tar.gz",
+            ],
         )
 
     if not native.existing_rule("com_google_protobuf"):
         http_archive(
             name = "com_google_protobuf",
-            url = "https://github.com/protocolbuffers/protobuf/archive/v3.11.4.tar.gz",
-            sha256 = "a79d19dcdf9139fa4b81206e318e33d245c4c9da1ffed21c87288ed4380426f9",
-            strip_prefix = "protobuf-3.11.4",
+            url = "https://github.com/protocolbuffers/protobuf/archive/v3.14.0.tar.gz",
+            sha256 = "d0f5f605d0d656007ce6c8b5a82df3037e1d8fe8b121ed42e536f569dec16113",
+            strip_prefix = "protobuf-3.14.0",
         )
 
     # TODO(akonradi): This shouldn't be necesary since the same http_archive block is imported by
@@ -122,12 +126,11 @@ def pgv_dependencies():
             server_urls = MAVEN_SERVER_URLS,
         )
 
-    if not native.existing_rule("io_bazel_rules_python"):
-        git_repository(
-            name = "io_bazel_rules_python",
-            remote = "https://github.com/bazelbuild/rules_python.git",
-            commit = "fdbb17a4118a1728d19e638a5291b4c4266ea5b8",
-            shallow_since = "1557865590 -0400",
+    if not native.existing_rule("rules_python"):
+        http_archive(
+            name = "rules_python",
+            url = "https://github.com/bazelbuild/rules_python/releases/download/0.1.0/rules_python-0.1.0.tar.gz",
+            sha256 = "b6d46438523a3ec0f3cead544190ee13223a52f6a6765a29eae7b7cc24cc83a0",
         )
 
     if not native.existing_rule("rules_proto"):
