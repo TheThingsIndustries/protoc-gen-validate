@@ -4,6 +4,8 @@ go 1.15
 
 replace github.com/lyft/protoc-gen-star => github.com/TheThingsIndustries/protoc-gen-star v0.5.2-gogo.1
 
+replace github.com/golang/protobuf => github.com/golang/protobuf v1.3.5
+
 require (
 	github.com/gogo/protobuf v1.3.1
 	github.com/golang/protobuf v1.3.5

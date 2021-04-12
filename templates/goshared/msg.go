@@ -1,6 +1,7 @@
 package goshared
 
 const msgTpl = `
+{{ if not (ignored .) -}}
 {{ if disabled . }}
 	{{- cmt "ValidateFields is disabled for " (msgTyp .) ". This method will always return nil." -}}
 {{ else }}
@@ -54,7 +55,7 @@ func (m {{ (msgTyp .).Pointer }}) ValidateFields(paths ...string) error {
                                 }
 								{{ render (context .) }}
 						{{ end -}}
-						}		
+						}
 					}
 			{{ end -}}
 				default:
@@ -207,4 +208,5 @@ var _ interface{
 	{{ end }}{{ end }}
 
 {{ end }}{{ end }}
+{{- end -}}
 `

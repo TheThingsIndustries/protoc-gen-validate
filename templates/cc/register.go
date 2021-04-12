@@ -201,12 +201,12 @@ func (fns CCFuncs) errIdxCause(ctx shared.RuleContext, idx, cause string, reason
 			errName, fns.lit(pgsgo.PGGUpperCamelCase(f.Name()))))
 
 	if idx != "" {
-		output = append(output, fmt.Sprintf(`msg << "[" << %s << "]";`, fns.lit(idx)))
+		output = append(output, fmt.Sprintf(`msg << "[" << %s << "]";`, idx))
 	} else if ctx.Index != "" {
-		output = append(output, fmt.Sprintf(`msg << "[" << %s << "]";`, fns.lit(ctx.Index)))
+		output = append(output, fmt.Sprintf(`msg << "[" << %s << "]";`, ctx.Index))
 	}
 
-	output = append(output, fmt.Sprintf(`msg << ": " << %s;`, fns.lit(fmt.Sprintf("%q", reason))))
+	output = append(output, fmt.Sprintf(`msg << ": " << %q;`, fmt.Sprint(reason...)))
 
 	if cause != "nil" && cause != "" {
 		output = append(output, fmt.Sprintf(`msg << " | caused by " << %s;`, cause))
@@ -280,8 +280,7 @@ func (fns CCFuncs) oneofTypeName(f pgs.Field) pgsgo.TypeName {
 	return pgsgo.TypeName(fmt.Sprintf("%s::%sCase::k%s",
 		fns.className(f.Message()),
 		pgsgo.PGGUpperCamelCase(f.OneOf().Name()),
-		pgsgo.PGGUpperCamelCase(f.Name()),
-	))
+		strings.ReplaceAll(pgsgo.PGGUpperCamelCase(f.Name()).String(), "_", "")))
 }
 
 func (fns CCFuncs) inType(f pgs.Field, x interface{}) string {

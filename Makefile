@@ -57,6 +57,9 @@ lint: bin/golint bin/shadow
 	# golint -set_exit_status
 	# check for variable shadowing
 	go vet -vettool=$(shell pwd)/bin/shadow ./...
+	# lints the python code for style enforcement
+	flake8 --config=python/setup.cfg python/protoc_gen_validate/validator.py
+	isort --check-only python/protoc_gen_validate/validator.py
 
 bin/shadow:
 	GOBIN=$(shell pwd)/bin go install golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow
@@ -78,10 +81,15 @@ harness: testcases tests/harness/go/harness.pb.go tests/harness/gogo/harness.pb.
  	# runs the test harness, validating a series of test cases in all supported languages
 	./bin/harness -go -gogo -cc
 
-.PHONY: bazel-harness
-bazel-harness:
-	# runs the test harness via bazel
-	bazel run //tests/harness/executor:executor --incompatible_new_actions_api=false -- -go -gogo -cc -java -python
+.PHONY: bazel-tests
+bazel-tests:
+	# Runs all tests with Bazel
+	bazel test //tests/...
+
+.PHONY: example-workspace
+example-workspace:
+	# Run all tests in the example workspace
+	cd example-workspace && bazel test //...
 
 .PHONY: testcases
 testcases: bin/gogofast bin/protoc-gen-go
@@ -118,7 +126,13 @@ testcases: bin/gogofast bin/protoc-gen-go
 		--validate_out="lang=gogo,Mtests/harness/cases/other_package/embed.proto=${PACKAGE}/tests/harness/cases/other_package/gogo:./gogo" \
 		./*.proto
 
-tests/harness/go/harness.pb.go: bin/protoc-gen-go
+validate/validate.pb.go: bin/protoc-gen-go validate/validate.proto
+	cd validate && protoc -I . \
+		--plugin=protoc-gen-go=$(shell pwd)/bin/protoc-gen-go \
+		--go_opt=paths=source_relative \
+		--go_out="${GO_IMPORT}:." validate.proto
+
+tests/harness/go/harness.pb.go: bin/protoc-gen-go tests/harness/harness.proto
 	# generates the test harness protos
 	cd tests/harness && protoc -I . \
 		--plugin=protoc-gen-go=$(shell pwd)/bin/protoc-gen-go \
@@ -149,8 +163,25 @@ tests/harness/java/java-harness:
 	# generates the Java-specific test harness
 	mvn -q -f java/pom.xml clean package -DskipTests
 
+.PHONY: prepare-python-release
+prepare-python-release:
+	cp validate/validate.proto python/
+	cp LICENSE python/
+
+.PHONY: python-release
+python-release: prepare-python-release
+	rm -rf python/dist
+	python3.8 -m build --no-isolation --sdist python
+	# the below command should be identical to `python3.8 -m build --wheel`
+	# however that returns mysterious `error: could not create 'build': File exists`.
+	# setuptools copies source and data files to a temporary build directory,
+	# but why there's a collision or why setuptools stopped respecting the `build_lib` flag is unclear.
+	# As a workaround, we build a source distribution and then separately build a wheel from it.
+	python3.8 -m pip wheel --wheel-dir python/dist --no-deps python/dist/*
+	python3.8 -m twine upload --verbose --skip-existing --repository ${PYPI_REPO} --username "__token__" --password ${PGV_PYPI_TOKEN} python/dist/*
+
 .PHONY: ci
-ci: lint bazel testcases bazel-harness build_generation_tests
+ci: lint bazel testcases bazel-tests build_generation_tests example-workspace
 
 .PHONY: clean
 clean:
@@ -170,3 +201,6 @@ clean:
 		tests/harness/cases/other_package/go \
 		tests/harness/cases/gogo \
 		tests/harness/cases/other_package/gogo \
+	rm -rf \
+		python/dist
+		python/*.egg-info
